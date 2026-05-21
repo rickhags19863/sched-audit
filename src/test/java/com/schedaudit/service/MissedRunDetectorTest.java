@@ -47,6 +47,16 @@ class MissedRunDetectorTest {
     }
 
     @Test
+    void hasMissedRun_returnsFalseWhenExecutionIsExactlyOnInterval() {
+        Instant now = Instant.now();
+        // Execution at exactly the interval boundary should not be considered missed
+        JobExecution exec = new JobExecution("hourly-sync", now.minus(Duration.ofHours(1)), null, true, null);
+        repository.save(exec);
+
+        assertFalse(detector.hasMissedRun("hourly-sync", Duration.ofHours(1), now));
+    }
+
+    @Test
     void detectMissedJobs_returnsOnlyMissedJobs() {
         Instant now = Instant.now();
 
