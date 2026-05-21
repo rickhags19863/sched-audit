@@ -1,5 +1,6 @@
 package com.schedaudit.model;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -41,6 +42,19 @@ public class JobExecution {
 
     public boolean isMissed() {
         return status == Status.MISSED;
+    }
+
+    /**
+     * Returns the delay between the scheduled time and the actual execution time.
+     * A positive duration indicates the job ran late; negative indicates it ran early.
+     *
+     * @return the delay as a {@link Duration}, or {@code null} if {@code executedAt} is not set
+     */
+    public Duration getExecutionDelay() {
+        if (executedAt == null) {
+            return null;
+        }
+        return Duration.between(scheduledAt, executedAt);
     }
 
     @Override
