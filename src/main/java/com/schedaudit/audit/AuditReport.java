@@ -4,8 +4,10 @@ import com.schedaudit.model.JobExecution;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +56,17 @@ public class AuditReport {
 
     public Map<String, Long> getStatusCounts() {
         return Collections.unmodifiableMap(statusCounts);
+    }
+
+    /**
+     * Returns the most recent job execution, if any.
+     *
+     * @return an Optional containing the latest JobExecution by start time,
+     *         or empty if there are no executions in this report.
+     */
+    public Optional<JobExecution> getLatestExecution() {
+        return executions.stream()
+                .max(Comparator.comparing(JobExecution::getStartTime));
     }
 
     @Override
